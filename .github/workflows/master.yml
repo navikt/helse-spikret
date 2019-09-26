@@ -17,9 +17,11 @@ jobs:
         java-version: '11.x'
     - name: create docker tag
       env:
-        DOCKER_IMAGE: docker.pkg.github.com/${{ github.repository }}/spa
+        DOCKER_IMAGE: docker.pkg.github.com/${{ github.repository }}/helse-spikret
       run: |
         echo $DOCKER_IMAGE > .docker_image
         echo $(echo $GITHUB_SHA | cut -c1-7) > .docker_tag
     - name: test and build
       run: ./gradlew test build
+    - name: build docker image
+      run: docker build . --pull -t $(cat .docker_image):$(cat .docker_tag)
