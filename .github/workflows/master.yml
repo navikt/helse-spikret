@@ -17,6 +17,7 @@ jobs:
         java-version: '11.x'
     - name: Snyk CLI Action
       uses: clarkio/snyk-cli-action@1.0.0
+      run: snyk test
     - name: create docker tag
       env:
         DOCKER_IMAGE: docker.pkg.github.com/${{ github.repository }}/helse-spikret
