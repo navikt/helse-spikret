@@ -38,24 +38,23 @@ fun main() {
         initRouting(applicationState)
     }.start(wait = false)
 
-    try {
-        val listeners = (1..env.applicationThreads).map {
-            GlobalScope.launch {
+    val listeners = (1..env.applicationThreads).map {
+        GlobalScope.launch {
+            try {
                 blockingApplicationLogic(applicationState)
+            } finally {
+                applicationState.running = false
             }
-        }.toList()
-
-        runBlocking {
-            Runtime.getRuntime().addShutdownHook(Thread {
-                applicationServer.stop(10, 10, TimeUnit.SECONDS)
-            })
-
-            applicationState.initialized = true
-            listeners.forEach { it.join() }
         }
+    }.toList()
 
-    } finally {
-        applicationState.running = false
+    runBlocking {
+        Runtime.getRuntime().addShutdownHook(Thread {
+            applicationServer.stop(10, 10, TimeUnit.SECONDS)
+        })
+
+        applicationState.initialized = true
+        listeners.forEach { it.join() }
     }
 }
 
