@@ -32,8 +32,6 @@ fun main() {
     val env = Environment()
     val applicationState = ApplicationState()
 
-    log.info("Starter Spikret")
-
     val applicationServer = embeddedServer(Netty, env.applicationPort) {
         initRouting(applicationState)
     }.start(wait = false)
