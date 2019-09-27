@@ -1,0 +1,49 @@
+{
+  "apiVersion": "nais.io/v1alpha1",
+  "kind": "Application",
+  "metadata":{
+    "labels": {
+      "team": "tbd"
+    },
+    "name": "spikret",
+    "namespace": "default"
+  },
+  "spec": {
+    "image": "is_set_from_pipeline",
+    "port": 8080,
+    "liveness": {
+      "path": "/is_alive",
+      "initialDelay": 20,
+      "failureThreshold": 10,
+      "periodSeconds": 5,
+      "timeout": 1
+    },
+    "readiness": {
+      "path": "/is_ready",
+      "initialDelay": 20,
+      "timeout": 1
+    },
+    "prometheus": {
+      "path": "/prometheus",
+      "enabled": true
+    },
+    "replicas": {
+      "cpuThresholdPercentage": 90,
+      "max": 1,
+      "min": 1
+    },
+    "resources": {
+      "limits": {
+        "cpu": "100m",
+        "memory": "128Mi"
+      },
+      "requests": {
+        "cpu": "20m",
+        "memory": "64Mi"
+      }
+    },
+    "vault": {
+      "enabled": false
+    }
+  }
+}
